@@ -14,16 +14,27 @@ namespace Tyuiu.Programmiste.Sprint5.Task1.V17.Lib
                 for (int x = startValue; x <= stopValue; x++)
                 {
                     double result = CalculateFunction(x);
-                    // Format avec virgule comme séparateur décimal
-                    results.Add(result.ToString("F2", CultureInfo.GetCultureInfo("fr-FR")));
+                    string formattedResult = FormatResult(result);
+                    results.Add(formattedResult);
                 }
 
-                // Retourne la chaîne directement au lieu d'écrire dans un fichier
                 return string.Join("\\n", results);
             }
             catch (Exception ex)
             {
                 return $"Erreur: {ex.Message}";
+            }
+        }
+
+        private string FormatResult(double value)
+        {
+            if (Math.Abs(value - Math.Round(value)) < 0.001)
+            {
+                return ((int)Math.Round(value)).ToString(CultureInfo.GetCultureInfo("fr-FR"));
+            }
+            else
+            {
+                return value.ToString("F2", CultureInfo.GetCultureInfo("fr-FR"));
             }
         }
 
@@ -33,16 +44,10 @@ namespace Tyuiu.Programmiste.Sprint5.Task1.V17.Lib
             {
                 double denominator = Math.Sin(x) + 1;
 
-                // Vérification division par zéro
                 if (Math.Abs(denominator) < 1e-10)
-                {
                     return 0;
-                }
 
-                double term1 = 2 * x - 4;
-                double term2 = (2 * x - 1) / denominator;
-
-                return term1 + term2;
+                return (2 * x - 4) + (2 * x - 1) / denominator;
             }
             catch
             {
