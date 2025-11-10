@@ -5,45 +5,32 @@ namespace Tyuiu.Programmiste.Sprint5.Task1.V17.Test
     public sealed class DataServiceTest
     {
         [TestMethod]
-        public void TestCalculateFunction_NormalValues()
+        public void TestSaveToFileTextData()
         {
             // Arrange
             DataService ds = new DataService();
+            string expected = "-19,62\\n-17,12\\n-18,15\\n-63,13\\n-24,92\\n-5\\n-1,46\\n1,57\\n6,38\\n32,78\\n225,11";
 
-            // Act & Assert
-            // Correction : utiliser "ds" au lieu de "calculator"
-            // Correction : "AreEqual" au lieu de "Arefqual"
-            Assert.AreEqual(-12.00, ds.CalculateFunction(-5), 0.01);
-            Assert.AreEqual(-10.00, ds.CalculateFunction(-4), 0.01);
-            Assert.AreEqual(-8.00, ds.CalculateFunction(-3), 0.01);
+            // Act
+            string result = ds.SaveToFileTextData(-5, 5);
+
+            // Assert
+            Assert.AreEqual(expected, result);
         }
 
         [TestMethod]
-        public void TestCalculateFunction_DivisionByZero()
+        public void TestCalculateFunction_SpecificValues()
         {
             // Arrange
             DataService ds = new DataService();
 
-            // Act
-            double result = ds.CalculateFunction(0);
-
-            // Assert
-            Assert.IsFalse(double.IsNaN(result));
-            Assert.IsFalse(double.IsInfinity(result));
-        }
-
-        [TestMethod]
-        public void TestSaveToFileTextData_Success()
-        {
-            // Arrange
-            DataService ds = new DataService();
-
-            // Act
-            string result = ds.SaveToFileTextData(-2, 2);
-
-            // Assert
-            Assert.AreEqual("Données sauvegardées avec succès dans OutPutFileTask1.txt", result);
-            Assert.IsTrue(System.IO.File.Exists("OutPutFileTask1.txt"));
+            // Act & Assert - test de quelques valeurs spécifiques
+            Assert.AreEqual(-19.62, ds.CalculateFunction(-5), 0.01);
+            Assert.AreEqual(-17.12, ds.CalculateFunction(-4), 0.01);
+            Assert.AreEqual(-18.15, ds.CalculateFunction(-3), 0.01);
+            Assert.AreEqual(-63.13, ds.CalculateFunction(-2), 0.01);
+            Assert.AreEqual(-24.92, ds.CalculateFunction(-1), 0.01);
+            Assert.AreEqual(-5.00, ds.CalculateFunction(0), 0.01);
         }
     }
 }
