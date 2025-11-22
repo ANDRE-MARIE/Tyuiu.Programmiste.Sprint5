@@ -26,10 +26,7 @@ namespace Tyuiu.Programmiste.Sprint5.Task1.V17.Test
 
             // Test via reflection ou méthode publique si disponible
             // Pour tester le formatage, on peut utiliser CalculateFunction et vérifier le format
-            double testValue1 = -5.0;
-            double testValue2 = -1.46;
-
-            // Utiliser la méthode privée via reflection ou rendre FormatResult publique pour le test
+          
         }
     }
 }

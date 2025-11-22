@@ -12,21 +12,26 @@ namespace Tyuiu.Programmiste.Sprint5.Task2.V9.Lib
     //2 ; 6 ; 8
 
     //1; 7; 1
-    public class DataService : ISprint5Task2V9
+    public class MatrixProcessor : ISprint5Task2V9
     {
         public string SaveToFileTextData(int[,] matrix)
         {
-            string filename = "OutPutFileTask2.csv";
+            string directoryPath = "output";
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
 
-            // Traitement : remplacer les impairs par 0
+            // Chemin complet du fichier
+            string filename = Path.Combine(directoryPath, "OutPutFileTask2.csv");
+
+            // Remplacer les impairs par 0
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
                     if (matrix[i, j] % 2 != 0)
-                    {
                         matrix[i, j] = 0;
-                    }
                 }
             }
 
@@ -46,7 +51,7 @@ namespace Tyuiu.Programmiste.Sprint5.Task2.V9.Lib
                 }
             }
 
-            // Afficher sur la console
+            // Afficher dans la console
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 string line = "";
