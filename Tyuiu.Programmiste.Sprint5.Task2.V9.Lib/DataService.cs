@@ -1,4 +1,8 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
 using tyuiu.cources.programming.interfaces.Sprint5;
 
 namespace Tyuiu.Programmiste.Sprint5.Task2.V9.Lib
@@ -12,23 +16,31 @@ namespace Tyuiu.Programmiste.Sprint5.Task2.V9.Lib
     //2 ; 6 ; 8
 
     //1; 7; 1
-    public class MatrixProcessor : ISprint5Task2V9
+    public class DataService : ISprint5Task2V9
     {
         public string SaveToFileTextData(int[,] matrix)
         {
-            string directoryPath = "output";
+            string path = $@"{Directory.GetCurrentDirectory()}\OutPutFileTask2.csv";
+
+            string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "output");
             if (!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
             }
+     
+            // Si le fichier existe, le supprimer
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
 
-            // Chemin complet du fichier
-            string filename = Path.Combine(directoryPath, "OutPutFileTask2.csv");
+            int rows = matrix.GetUpperBound(0) + 1;
+            int columns = matrix.GetLength(1); // plus simple
 
             // Remplacer les impairs par 0
-            for (int i = 0; i < matrix.GetLength(0); i++)
+            for (int i = 0; i < rows; i++)
             {
-                for (int j = 0; j < matrix.GetLength(1); j++)
+                for (int j = 0; j < columns; j++)
                 {
                     if (matrix[i, j] % 2 != 0)
                         matrix[i, j] = 0;
@@ -36,15 +48,15 @@ namespace Tyuiu.Programmiste.Sprint5.Task2.V9.Lib
             }
 
             // Écrire dans le fichier
-            using (StreamWriter sw = new StreamWriter(filename))
+            using (StreamWriter sw = new StreamWriter(path))
             {
-                for (int i = 0; i < matrix.GetLength(0); i++)
+                for (int i = 0; i < rows; i++)
                 {
                     string line = "";
-                    for (int j = 0; j < matrix.GetLength(1); j++)
+                    for (int j = 0; j < columns; j++)
                     {
                         line += matrix[i, j];
-                        if (j < matrix.GetLength(1) - 1)
+                        if (j < columns - 1)
                             line += " ; ";
                     }
                     sw.WriteLine(line);
@@ -52,19 +64,20 @@ namespace Tyuiu.Programmiste.Sprint5.Task2.V9.Lib
             }
 
             // Afficher dans la console
-            for (int i = 0; i < matrix.GetLength(0); i++)
+            for (int i = 0; i < rows; i++)
             {
                 string line = "";
-                for (int j = 0; j < matrix.GetLength(1); j++)
+                for (int j = 0; j < columns; j++)
                 {
                     line += matrix[i, j];
-                    if (j < matrix.GetLength(1) - 1)
+                    if (j < columns - 1)
                         line += " ; ";
                 }
                 Console.WriteLine(line);
             }
 
-            return filename;
+            // Retourne le chemin complet du fichier créé
+            return path;
         }
     }
 }

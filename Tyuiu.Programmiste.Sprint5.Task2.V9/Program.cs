@@ -3,7 +3,7 @@ using Tyuiu.Programmiste.Sprint5.Task2.V9.Lib;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    static void Main()
     {
         int[,] matrix = {
             { 6, 8, 3 },
@@ -11,10 +11,9 @@ internal class Program
             { 1, 7, 1 }
         };
 
-        MatrixProcessor processor = new MatrixProcessor();
-        string filePath = processor.SaveToFileTextData(matrix);
-
-        Console.WriteLine($"Fichier sauvegardé : {filePath}");
+        DataService service = new DataService();
+        string cheminFichier = service.SaveToFileTextData(matrix);
+        Console.WriteLine($"Fichier sauvegardé : {cheminFichier}");
         Console.WriteLine("Vérifiez dans le dossier 'output' si le fichier est correct.");
     }
 }
