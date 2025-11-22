@@ -2,18 +2,60 @@
 using Tyuiu.Programmiste.Sprint5.Task2.V9.Lib;
 internal class Program
 {
-    private static void Main(string[] args)
+    public string SaveToFileTextData(int[,] matrix)
     {
-        int[,] matrix = {
-                { 6, 8, 3 },
-                { 2, 6, 8 },
-                { 1, 7, 1 }
-            };
+        // Crée le dossier "output" si il n'existe pas
+        string directoryPath = "output";
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
 
-        DataService saver = new DataService();
+        // Chemin complet vers le fichier dans le dossier "output"
+        string filename = Path.Combine(directoryPath, "OutPutFileTask2.csv");
 
-        string filename = saver.SaveToFileTextData(matrix);
+        // Remplacer les éléments impairs par 0
+        for (int i = 0; i < matrix.GetLength(0); i++)
+        {
+            for (int j = 0; j < matrix.GetLength(1); j++)
+            {
+                if (matrix[i, j] % 2 != 0)
+                {
+                    matrix[i, j] = 0;
+                }
+            }
+        }
 
-        Console.WriteLine($"Données sauvegardées dans {filename}");
+        // Écrire dans le fichier
+        using (StreamWriter sw = new StreamWriter(filename))
+        {
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                string line = "";
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    line += matrix[i, j];
+                    if (j < matrix.GetLength(1) - 1)
+                        line += " ; ";
+                }
+                sw.WriteLine(line);
+            }
+        }
+
+        // Afficher le contenu dans la console
+        for (int i = 0; i < matrix.GetLength(0); i++)
+        {
+            string line = "";
+            for (int j = 0; j < matrix.GetLength(1); j++)
+            {
+                line += matrix[i, j];
+                if (j < matrix.GetLength(1) - 1)
+                    line += " ; ";
+            }
+            Console.WriteLine(line);
+        }
+
+        // Retourne le chemin du fichier créé
+        return filename;
     }
 }
