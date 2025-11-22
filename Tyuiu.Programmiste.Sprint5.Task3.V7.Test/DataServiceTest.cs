@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using Tyuiu.Programmiste.Sprint5.Task3.V7.Lib;
+
 namespace Tyuiu.Programmiste.Sprint5.Task3.V7.Test
 {
     [TestClass]
@@ -10,10 +11,11 @@ namespace Tyuiu.Programmiste.Sprint5.Task3.V7.Test
         [TestMethod]
         public void CheckedExistsFile()
         {
-            string path = $@"{Directory.GetCurrentDirectory()}\OutPutFileTask3.bin";
-
             DataService service = new DataService();
             string filePath = service.SaveToFileTextData(2);
+
+            // Attendre un peu pour s'assurer que le fichier est libéré
+            System.Threading.Thread.Sleep(100);
 
             FileInfo fileInfo = new FileInfo(filePath);
             bool fileExists = fileInfo.Exists;
@@ -28,8 +30,12 @@ namespace Tyuiu.Programmiste.Sprint5.Task3.V7.Test
             DataService service = new DataService();
             string filePath = service.SaveToFileTextData(2);
 
-            // Lecture du fichier binaire pour vérifier le calcul
-            using (BinaryReader reader = new BinaryReader(File.Open(filePath, FileMode.Open)))
+            // Attendre un peu pour s'assurer que le fichier est libéré
+            System.Threading.Thread.Sleep(100);
+
+            // Lecture du fichier binaire avec FileShare.ReadWrite
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (BinaryReader reader = new BinaryReader(fs))
             {
                 double valeur = reader.ReadDouble();
                 double expected = 1.6 * Math.Pow(2, 3) - 2.1 * Math.Pow(2, 2) + 7 * 2;
