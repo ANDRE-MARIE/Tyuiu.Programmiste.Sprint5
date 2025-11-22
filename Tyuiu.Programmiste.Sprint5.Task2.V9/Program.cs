@@ -1,0 +1,19 @@
+﻿
+using Tyuiu.Programmiste.Sprint5.Task2.V9.Lib;
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        int[,] matrix = {
+                { 6, 8, 3 },
+                { 2, 6, 8 },
+                { 1, 7, 1 }
+            };
+
+        DataService saver = new DataService();
+
+        string filename = saver.SaveToFileTextData(matrix);
+
+        Console.WriteLine($"Données sauvegardées dans {filename}");
+    }
+}
