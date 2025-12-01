@@ -13,51 +13,32 @@ namespace Tyuiu.Programmiste.Sprint5.Task7.V2.Lib
         {
 
             {
-                string outputPath = "";
-
                 try
                 {
-                    // Vérifier si le fichier existe
-                    if (!File.Exists(path))
-                    {
-                        throw new FileNotFoundException($"Файл не найден: {path}");
-                    }
+                    // 1. Lire le fichier d'entrée
+                    string content = File.ReadAllText(path, Encoding.UTF8);
 
-                    // Lire le contenu du fichier
-                    string content;
-                    using (StreamReader reader = new StreamReader(path, Encoding.UTF8))
-                    {
-                        content = reader.ReadToEnd();
-                    }
-
-                    // Afficher le contenu original
+                    // 2. Afficher le contenu original (pour débogage)
                     Console.WriteLine("Содержимое исходного файла:");
                     Console.WriteLine(content);
                     Console.WriteLine();
 
-                    // SELON LES TESTS : Supprimer la ponctuation (pas les chiffres)
-                    // Le pattern [^\w\s]|_ supprime tout ce qui n'est pas un caractère de mot ou un espace
-                    // Cela correspond à la suppression de la ponctuation
-                    string pattern = @"[^\w\s]|_";
-                    string result = Regex.Replace(content, pattern, "");
+                    // 3. Remplacer TOUS les chiffres par '#' - CORRECTION ICI
+                    // Utilisation de [0-9] ou \d pour matcher tous les chiffres
+                    string result = Regex.Replace(content, "[0-9]", "#");
 
-                    // Afficher le résultat
-                    Console.WriteLine("Содержимое после удаления знаков препинания:");
+                    // 4. Afficher le résultat
+                    Console.WriteLine("Содержимое после замены цифр на '#':");
                     Console.WriteLine(result);
                     Console.WriteLine();
 
-                    // Créer le chemin pour le fichier de sortie comme attendu par les tests
-                    outputPath = Path.Combine(
-                        Path.GetTempPath(),
-                        $"OutPutDataFileTask7V21_{Guid.NewGuid()}.txt"
-                    );
+                    // 5. Déterminer le chemin de sortie
+                    // Dans le même dossier que le fichier d'entrée
+                    string outputDir = Path.GetDirectoryName(path);
+                    string outputPath = Path.Combine(outputDir, "OutPutDataFileTask7V2.txt");
 
-                    // Écrire le résultat avec partage de fichier
-                    using (FileStream fs = new FileStream(outputPath, FileMode.Create, FileAccess.Write, FileShare.Read))
-                    using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
-                    {
-                        writer.Write(result);
-                    }
+                    // 6. Sauvegarder le résultat
+                    File.WriteAllText(outputPath, result, Encoding.UTF8);
 
                     Console.WriteLine($"Результат сохранен в файл: {outputPath}");
 
@@ -65,14 +46,8 @@ namespace Tyuiu.Programmiste.Sprint5.Task7.V2.Lib
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Ошибка в LoadDataAndSave: {ex.Message}");
-                    // Retourner un chemin valide même en cas d'erreur pour éviter les exceptions dans les tests
-                    if (string.IsNullOrEmpty(outputPath))
-                    {
-                        outputPath = Path.Combine(Path.GetTempPath(), $"OutPutDataFileTask7V21_{Guid.NewGuid()}.txt");
-                        File.WriteAllText(outputPath, "Ошибка обработки файла", Encoding.UTF8);
-                    }
-                    return outputPath;
+                    Console.WriteLine($"Ошибка: {ex.Message}");
+                    throw;
                 }
             }
         }
