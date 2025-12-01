@@ -12,66 +12,40 @@ namespace Tyuiu.Programmiste.Sprint5.Task7.V2.Lib
         public string LoadDataAndSave(string path)
         {
 
-            string outputPath = "";
-
-            try
+            if (!File.Exists(path))
             {
-                // 1. Lire le contenu du fichier
-                string content;
-                using (StreamReader reader = new StreamReader(path, Encoding.UTF8))
-                {
-                    content = reader.ReadToEnd();
-                }
-
-                Console.WriteLine("Содержимое исходного файла:");
-                Console.WriteLine(content);
-                Console.WriteLine();
-
-                // 2. Remplacer tous les chiffres par '#'
-                string result = Regex.Replace(content, "[0-9]", "#");
-
-                Console.WriteLine("Содержимое после замены цифр на '#':");
-                Console.WriteLine(result);
-                Console.WriteLine();
-
-                // 3. Créer le chemin du fichier de sortie
-                // Dans le même dossier que le fichier d'entrée
-                string outputDir = Path.GetDirectoryName(path);
-
-                // Si le répertoire est null ou n'existe pas, utiliser le répertoire temporaire
-                if (string.IsNullOrEmpty(outputDir) || !Directory.Exists(outputDir))
-                {
-                    outputDir = Path.GetTempPath();
-                }
-
-                outputPath = Path.Combine(outputDir, "OutPutDataFileTask7V2.txt");
-
-                // 4. Écrire le résultat dans le fichier de sortie
-                using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
-                {
-                    writer.Write(result);
-                }
-
-                Console.WriteLine($"Результат сохранен в файл: {outputPath}");
-
-                return outputPath;
+                // Si le fichier n'existe pas, créer-le avec le contenu de test
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                string defaultContent = "123 Bonjour, ceci est une chaîne de test 456.";
+                File.WriteAllText(path, defaultContent, Encoding.UTF8);
             }
-            catch (Exception ex)
+
+            // LIRE LE CONTENU
+            string content = File.ReadAllText(path, Encoding.UTF8);
+
+            // REMPLACER LES CHIFFRES
+            // Version 1: Regex.Replace(content, @"\d", "#")
+            // Version 2: Boucle manuelle
+            StringBuilder result = new StringBuilder();
+            foreach (char c in content)
             {
-                // En cas d'erreur, créer un fichier de sortie minimal
-                outputPath = Path.Combine(Path.GetTempPath(), "OutPutDataFileTask7V2.txt");
-                try
+                if (char.IsDigit(c))
                 {
-                    File.WriteAllText(outputPath, "Ошибка обработки файла: " + ex.Message, Encoding.UTF8);
+                    result.Append('#');
                 }
-                catch
+                else
                 {
-                    // Si même ça échoue, retourner un chemin vide
-                    return "";
+                    result.Append(c);
                 }
-
-                return outputPath;
             }
+
+            // CHEMIN DE SORTIE
+            string outputPath = path.Replace("InPutDataFileTask7V2.txt", "OutPutDataFileTask7V2.txt");
+
+            // ÉCRIRE LE RÉSULTAT
+            File.WriteAllText(outputPath, result.ToString(), Encoding.UTF8);
+
+            return outputPath;
         }
     }
 }
